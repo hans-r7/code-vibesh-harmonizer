@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { generateCode } from "@/services/codeGenService";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 const CodeGen = () => {
   const [prompt, setPrompt] = useState("");
@@ -30,14 +30,23 @@ const CodeGen = () => {
 
     setError(null);
     setIsGenerating(true);
+    setCode(""); // Clear previous code
+    
     try {
+      toast.info("Connecting to code generation API...");
       const generatedCode = await generateCode(prompt);
-      setCode(generatedCode);
-      toast.success("Code generated successfully!");
+      
+      if (generatedCode) {
+        setCode(generatedCode);
+        toast.success("Code generated successfully!");
+      } else {
+        setError("No code was generated. Try a different prompt.");
+        toast.error("Failed to generate code. Please try again with a different prompt.");
+      }
     } catch (error) {
+      console.error(error);
       setError("Failed to generate code. Please try again.");
       toast.error("Failed to generate code. Please try again.");
-      console.error(error);
     } finally {
       setIsGenerating(false);
     }
@@ -71,7 +80,14 @@ const CodeGen = () => {
               className="bg-vibesh-accent hover:bg-vibesh-accent/90 text-vibesh-dark font-medium"
               disabled={isGenerating}
             >
-              {isGenerating ? "Generating..." : "Generate"}
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                "Generate"
+              )}
             </Button>
           </div>
         </div>
@@ -83,9 +99,22 @@ const CodeGen = () => {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          <pre className="font-mono text-sm overflow-auto max-h-[600px] whitespace-pre-wrap">
-            <code>{code}</code>
-          </pre>
+          {isGenerating && !code && (
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-vibesh-accent" />
+              <span className="ml-3">Generating code...</span>
+            </div>
+          )}
+          {!isGenerating && !code && !error && (
+            <div className="text-gray-400 p-8 text-center">
+              Enter a prompt and click Generate to create code
+            </div>
+          )}
+          {code && (
+            <pre className="font-mono text-sm overflow-auto max-h-[600px] whitespace-pre-wrap bg-black/30 p-4 rounded">
+              <code>{code}</code>
+            </pre>
+          )}
         </Card>
       </div>
     </div>

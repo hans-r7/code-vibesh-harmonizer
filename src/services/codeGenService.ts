@@ -1,5 +1,6 @@
 
-const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/agentica-org/DeepCoder-14B-Preview";
+// Using a different model that's available for inference
+const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/Xenova/codegen-350M-mono";
 
 const mockResponses: Record<string, string> = {
   "default": `function helloWorld() {
@@ -419,10 +420,19 @@ export async function generateCode(prompt: string) {
         "Content-Type": "application/json",
         "Authorization": "Bearer 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"
       },
-      body: JSON.stringify({ inputs: prompt }),
+      body: JSON.stringify({ 
+        inputs: prompt,
+        parameters: {
+          max_new_tokens: 512,
+          temperature: 0.7,
+          return_full_text: false
+        }
+      }),
     });
 
     if (!response.ok) {
+      console.warn(`API error: ${response.status} ${response.statusText}`);
+      
       // If the API call fails, fall back to mock responses
       console.warn("Falling back to mock responses due to API error");
       
@@ -437,7 +447,19 @@ export async function generateCode(prompt: string) {
     }
 
     const result = await response.json();
-    return result[0].generated_text;
+    console.log("API response:", result);
+    
+    // Handle different response formats
+    if (typeof result === 'string') {
+      return result;
+    } else if (Array.isArray(result) && result[0]?.generated_text) {
+      return result[0].generated_text;
+    } else if (result.generated_text) {
+      return result.generated_text;
+    } else {
+      console.warn("Unexpected response format:", result);
+      return typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result);
+    }
     
   } catch (error) {
     console.error('Error generating code:', error);
