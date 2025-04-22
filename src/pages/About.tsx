@@ -37,9 +37,9 @@ const About = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-vibesh-dark mb-4">About VibeCoder</h1>
           <p className="text-lg text-vibesh-dark/80 max-w-2xl mx-auto">
-            VibeCoder was created as a Systems Analysis and Design project, 
-            combining our passion for technology with the goal of making code generation 
-            more accessible and intuitive.
+            VibeCoder was created as part of our Systems Analysis and Design course at CSU Long Beach.
+            Inspired by our shared passion for technology, our team set out to make code generation more accessible, intuitive, and enjoyable for everyone.
+
           </p>
         </div>
 
