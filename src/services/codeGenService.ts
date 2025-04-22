@@ -1,3 +1,4 @@
+
 import { toast } from "sonner";
 
 // Using a smaller model that's better supported for inference
