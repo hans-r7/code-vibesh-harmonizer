@@ -1,3 +1,4 @@
+
 const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/agentica-org/DeepCoder-14B-Preview";
 
 const mockResponses: Record<string, string> = {
@@ -416,8 +417,7 @@ export async function generateCode(prompt: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // You'll need to get an API token from Hugging Face
-        "Authorization": "Bearer YOUR_HUGGING_FACE_API_TOKEN"
+        "Authorization": "Bearer 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"
       },
       body: JSON.stringify({ inputs: prompt }),
     });
