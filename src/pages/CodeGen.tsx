@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +10,6 @@ import { generateCode } from "@/services/codeGenService";
 const CodeGen = () => {
   const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState("");
-  const [apiKey, setApiKey] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [examples] = useState([
     "Build a dark-themed dashboard with Tailwind",
@@ -28,14 +26,9 @@ const CodeGen = () => {
       return;
     }
 
-    if (!apiKey.trim()) {
-      toast.error("Please enter your Perplexity API key");
-      return;
-    }
-
     setIsGenerating(true);
     try {
-      const generatedCode = await generateCode(prompt, apiKey);
+      const generatedCode = await generateCode(prompt);
       setCode(generatedCode);
       toast.success("Code generated successfully!");
     } catch (error) {
@@ -63,17 +56,6 @@ const CodeGen = () => {
             ))}
           </div>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="api-key">Perplexity API Key</Label>
-              <Input
-                id="api-key"
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Enter your API key"
-                className="bg-white/90"
-              />
-            </div>
             <Textarea
               placeholder="Write your own prompt..."
               value={prompt}
