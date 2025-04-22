@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -10,6 +9,7 @@ const CodeGen = () => {
   const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isModelLoading, setIsModelLoading] = useState(true);
   const [examples] = useState([
     "Build a dark-themed dashboard with Tailwind",
     "Explain this TypeScript error",
@@ -18,6 +18,12 @@ const CodeGen = () => {
     "Refactor this function to be more readable",
     "Generate SEO metadata for a blog post",
   ]);
+
+  useEffect(() => {
+    generateCode("")
+      .catch(() => {})
+      .finally(() => setIsModelLoading(false));
+  }, []);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -60,13 +66,14 @@ const CodeGen = () => {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="min-h-[100px] bg-white/90"
+              disabled={isModelLoading}
             />
             <Button
               onClick={handleGenerate}
               className="bg-vibesh-accent hover:bg-vibesh-accent/90 text-vibesh-dark font-medium"
-              disabled={isGenerating}
+              disabled={isGenerating || isModelLoading}
             >
-              {isGenerating ? "Generating..." : "Generate"}
+              {isModelLoading ? "Loading Model..." : isGenerating ? "Generating..." : "Generate"}
             </Button>
           </div>
         </div>
