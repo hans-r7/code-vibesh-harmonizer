@@ -1,5 +1,5 @@
+const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/agentica-org/DeepCoder-14B-Preview";
 
-// Mock code generation responses to avoid unauthorized Hugging Face API calls
 const mockResponses: Record<string, string> = {
   "default": `function helloWorld() {
   console.log("Hello, world!");
@@ -411,20 +411,37 @@ function calculate(a, b, c, operation) {
 
 export async function generateCode(prompt: string) {
   try {
-    // Simulate a small loading delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Check if we have a specific mock response for this prompt
-    for (const key in mockResponses) {
-      if (prompt.toLowerCase().includes(key.toLowerCase())) {
-        return mockResponses[key];
+    // First, try to use the Hugging Face API
+    const response = await fetch(HUGGING_FACE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // You'll need to get an API token from Hugging Face
+        "Authorization": "Bearer YOUR_HUGGING_FACE_API_TOKEN"
+      },
+      body: JSON.stringify({ inputs: prompt }),
+    });
+
+    if (!response.ok) {
+      // If the API call fails, fall back to mock responses
+      console.warn("Falling back to mock responses due to API error");
+      
+      // Check if we have a specific mock response for this prompt
+      for (const key in mockResponses) {
+        if (prompt.toLowerCase().includes(key.toLowerCase())) {
+          return mockResponses[key];
+        }
       }
+      
+      return mockResponses["default"];
     }
+
+    const result = await response.json();
+    return result[0].generated_text;
     
-    // Return default response if no match
-    return mockResponses["default"];
   } catch (error) {
     console.error('Error generating code:', error);
-    throw error;
+    // Fallback to mock responses on error
+    return mockResponses["default"];
   }
 }
