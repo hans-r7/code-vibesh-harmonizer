@@ -3,10 +3,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { generateCode } from "@/services/codeGenService";
 
 const CodeGen = () => {
   const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [examples] = useState([
     "Build a dark-themed dashboard with Tailwind",
     "Explain this TypeScript error",
@@ -16,9 +22,28 @@ const CodeGen = () => {
     "Generate SEO metadata for a blog post",
   ]);
 
-  const handleGenerate = () => {
-    // This is where we'll integrate the AI code generation
-    setCode("// Example output:\nimport React from 'react';\n\nconst Component = () => {\n  return <div>Generated code will appear here</div>;\n};\n\nexport default Component;");
+  const handleGenerate = async () => {
+    if (!prompt.trim()) {
+      toast.error("Please enter a prompt");
+      return;
+    }
+
+    if (!apiKey.trim()) {
+      toast.error("Please enter your Perplexity API key");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const generatedCode = await generateCode(prompt, apiKey);
+      setCode(generatedCode);
+      toast.success("Code generated successfully!");
+    } catch (error) {
+      toast.error("Failed to generate code. Please try again.");
+      console.error(error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -38,6 +63,17 @@ const CodeGen = () => {
             ))}
           </div>
           <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="api-key">Perplexity API Key</Label>
+              <Input
+                id="api-key"
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="Enter your API key"
+                className="bg-white/90"
+              />
+            </div>
             <Textarea
               placeholder="Write your own prompt..."
               value={prompt}
@@ -47,14 +83,15 @@ const CodeGen = () => {
             <Button
               onClick={handleGenerate}
               className="bg-vibesh-accent hover:bg-vibesh-accent/90 text-vibesh-dark font-medium"
+              disabled={isGenerating}
             >
-              Generate
+              {isGenerating ? "Generating..." : "Generate"}
             </Button>
           </div>
         </div>
         <Card className="bg-vibesh-dark/95 p-6 text-white">
           <h2 className="text-2xl font-bold mb-4">Code Output</h2>
-          <pre className="font-mono text-sm overflow-auto">
+          <pre className="font-mono text-sm overflow-auto max-h-[600px] whitespace-pre-wrap">
             <code>{code}</code>
           </pre>
         </Card>
