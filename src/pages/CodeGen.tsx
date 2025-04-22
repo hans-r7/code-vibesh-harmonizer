@@ -34,9 +34,12 @@ const CodeGen = () => {
     
     try {
       toast.info("Connecting to code generation API...");
-      const generatedCode = await generateCode(prompt);
+      console.log("Generating code for prompt:", prompt);
       
-      if (generatedCode) {
+      const generatedCode = await generateCode(prompt);
+      console.log("Code generation complete, length:", generatedCode?.length || 0);
+      
+      if (generatedCode && generatedCode.length > 0) {
         setCode(generatedCode);
         toast.success("Code generated successfully!");
       } else {
@@ -44,7 +47,7 @@ const CodeGen = () => {
         toast.error("Failed to generate code. Please try again with a different prompt.");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Code generation error:", error);
       setError("Failed to generate code. Please try again.");
       toast.error("Failed to generate code. Please try again.");
     } finally {
