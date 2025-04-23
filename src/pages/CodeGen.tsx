@@ -14,12 +14,12 @@ const CodeGen = () => {
   const [error, setError] = useState<string | null>(null);
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
   const [suggestedQuestions] = useState([
-    "How do I implement user authentication in React?",
-    "What's the best way to manage global state?",
-    "How can I optimize my React components?",
-    "What are React hooks and how do I use them?",
-    "How do I handle forms in React?",
-    "What's the difference between state and props?",
+    "Generate a React calculator app with basic operations",
+    "Create a todo list app with local storage",
+    "Build a weather app that fetches data from an API",
+    "Make a simple authentication form with validation",
+    "Create a React image gallery with previews",
+    "Build a countdown timer component"
   ]);
 
   const handleGenerate = async () => {
