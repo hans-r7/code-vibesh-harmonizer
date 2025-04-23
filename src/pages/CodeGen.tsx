@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -84,7 +83,7 @@ const CodeGen = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-vibesh-dark mb-4">Suggested Questions</h2>
+            <h2 className="text-2xl font-bold text-vibesh-dark mb-4">User History</h2>
             <div className="space-y-3">
               {suggestedQuestions.map((question, index) => (
                 <Card
