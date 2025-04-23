@@ -6,20 +6,21 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { generateCode } from "@/services/codeGenService";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Clock, Loader2 } from "lucide-react";
 
 const CodeGen = () => {
   const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [examples] = useState([
-    "Build a dark-themed dashboard with Tailwind",
-    "Explain this TypeScript error",
-    "Create a login form with validation",
-    "Build a collapsible sidebar in React",
-    "Refactor this function to be more readable",
-    "Generate SEO metadata for a blog post",
+  const [promptHistory, setPromptHistory] = useState<string[]>([]);
+  const [suggestedQuestions] = useState([
+    "How do I implement user authentication in React?",
+    "What's the best way to manage global state?",
+    "How can I optimize my React components?",
+    "What are React hooks and how do I use them?",
+    "How do I handle forms in React?",
+    "What's the difference between state and props?",
   ]);
 
   const handleGenerate = async () => {
@@ -41,6 +42,7 @@ const CodeGen = () => {
       
       if (generatedCode && generatedCode.length > 0) {
         setCode(generatedCode);
+        setPromptHistory(prev => [prompt, ...prev.slice(0, 4)]); // Keep last 5 prompts
         toast.success("Code generated successfully!");
       } else {
         setError("No code was generated. Try a different prompt.");
@@ -59,18 +61,43 @@ const CodeGen = () => {
     <div className="min-h-screen bg-gradient-to-r from-vibesh-yellow to-vibesh-coral p-6">
       <div className="max-w-7xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-vibesh-dark">Prompt Examples</h2>
-          <div className="space-y-3">
-            {examples.map((example, index) => (
-              <Card
-                key={index}
-                className="p-4 cursor-pointer hover:bg-white/80 transition-colors"
-                onClick={() => setPrompt(example)}
-              >
-                <span>▶ {example}</span>
-              </Card>
-            ))}
+          <div className="space-y-4">
+            {promptHistory.length > 0 && (
+              <>
+                <h2 className="text-2xl font-bold text-vibesh-dark flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  Recent Prompts
+                </h2>
+                <div className="space-y-3">
+                  {promptHistory.map((historyPrompt, index) => (
+                    <Card
+                      key={index}
+                      className="p-4 cursor-pointer hover:bg-white/80 transition-colors"
+                      onClick={() => setPrompt(historyPrompt)}
+                    >
+                      <span>▶ {historyPrompt}</span>
+                    </Card>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
+
+          <div>
+            <h2 className="text-2xl font-bold text-vibesh-dark mb-4">Suggested Questions</h2>
+            <div className="space-y-3">
+              {suggestedQuestions.map((question, index) => (
+                <Card
+                  key={index}
+                  className="p-4 cursor-pointer hover:bg-white/80 transition-colors"
+                  onClick={() => setPrompt(question)}
+                >
+                  <span>▶ {question}</span>
+                </Card>
+              ))}
+            </div>
+          </div>
+
           <div className="space-y-4">
             <Textarea
               placeholder="Write your own prompt..."
@@ -94,6 +121,7 @@ const CodeGen = () => {
             </Button>
           </div>
         </div>
+
         <Card className="bg-vibesh-dark/95 p-6 text-white">
           <h2 className="text-2xl font-bold mb-4">Code Output</h2>
           {error && (
