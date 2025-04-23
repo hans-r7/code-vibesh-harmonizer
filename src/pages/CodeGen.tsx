@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { generateCode } from "@/services/codeGenService";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, ArrowRight } from "lucide-react";
 
 const CodeGen = () => {
   const [prompt, setPrompt] = useState("");
@@ -60,16 +60,30 @@ const CodeGen = () => {
     <div className="min-h-screen bg-gradient-to-r from-vibesh-yellow to-vibesh-coral p-6">
       <div className="max-w-7xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <div className="bg-white/80 rounded-2xl p-6 border border-white/20 shadow-lg">
+          <div className="bg-white/90 rounded-2xl p-6 border border-white/20 shadow-lg">
             <h2 className="text-2xl font-bold text-vibesh-dark mb-4">User History</h2>
             <div className="space-y-3">
               {suggestedQuestions.map((question, index) => (
                 <div
                   key={index}
-                  className="bg-white/60 rounded-lg p-3 cursor-pointer hover:bg-white/80 transition-colors"
+                  className="bg-white rounded-lg p-3 cursor-pointer 
+                    transition-all duration-300 
+                    hover:bg-vibesh-accent/10 
+                    hover:shadow-md 
+                    border border-transparent 
+                    hover:border-vibesh-accent/30 
+                    group"
                   onClick={() => setPrompt(question)}
                 >
-                  <span className="text-vibesh-dark">▶ {question}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-vibesh-dark group-hover:text-vibesh-dark/80 transition-colors">
+                      {question}
+                    </span>
+                    <ArrowRight 
+                      className="text-vibesh-accent opacity-0 group-hover:opacity-100 transition-opacity" 
+                      size={18} 
+                    />
+                  </div>
                 </div>
               ))}
             </div>
