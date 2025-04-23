@@ -60,39 +60,43 @@ const CodeGen = () => {
     <div className="min-h-screen bg-gradient-to-r from-vibesh-yellow to-vibesh-coral p-6">
       <div className="max-w-7xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <div className="space-y-4">
-            {promptHistory.length > 0 && (
+          <div className="bg-white/80 rounded-2xl p-6 border border-white/20 shadow-lg">
+            {promptHistory.length > 0 ? (
               <>
-                <h2 className="text-2xl font-bold text-vibesh-dark flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-vibesh-dark flex items-center gap-2 mb-4">
                   <Clock className="h-5 w-5" />
                   Recent Prompts
                 </h2>
                 <div className="space-y-3">
                   {promptHistory.map((historyPrompt, index) => (
-                    <Card
+                    <div
                       key={index}
-                      className="p-4 cursor-pointer hover:bg-white/80 transition-colors"
+                      className="bg-white/60 rounded-lg p-3 cursor-pointer hover:bg-white/80 transition-colors"
                       onClick={() => setPrompt(historyPrompt)}
                     >
-                      <span>▶ {historyPrompt}</span>
-                    </Card>
+                      <span className="text-vibesh-dark">▶ {historyPrompt}</span>
+                    </div>
                   ))}
                 </div>
               </>
+            ) : (
+              <div className="text-gray-500 text-center py-4">
+                No history yet. Generate your first code!
+              </div>
             )}
           </div>
 
-          <div>
+          <div className="bg-white/80 rounded-2xl p-6 border border-white/20 shadow-lg">
             <h2 className="text-2xl font-bold text-vibesh-dark mb-4">User History</h2>
             <div className="space-y-3">
               {suggestedQuestions.map((question, index) => (
-                <Card
+                <div
                   key={index}
-                  className="p-4 cursor-pointer hover:bg-white/80 transition-colors"
+                  className="bg-white/60 rounded-lg p-3 cursor-pointer hover:bg-white/80 transition-colors"
                   onClick={() => setPrompt(question)}
                 >
-                  <span>▶ {question}</span>
-                </Card>
+                  <span className="text-vibesh-dark">▶ {question}</span>
+                </div>
               ))}
             </div>
           </div>
