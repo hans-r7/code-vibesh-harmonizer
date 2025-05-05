@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,8 +37,11 @@ const CodeGen = () => {
   // Calculator application image URL
   const calculatorAppImage = "/lovable-uploads/8c51f07f-5d50-4b91-9df6-8d70c2f670a3.png";
   
-  // Weather application image URL - newly added
+  // Weather application image URL
   const weatherAppImage = "/lovable-uploads/b5a80a42-9abd-4e4a-949c-74b94f467ab5.png";
+  
+  // Countdown timer application image URL - newly added
+  const countdownTimerImage = "/lovable-uploads/e2ce4071-b505-49dd-af9d-093fef64d612.png";
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -89,6 +91,15 @@ const CodeGen = () => {
   
   const getRandomPlaceholder = () => {
     const lowercasePrompt = prompt.toLowerCase();
+    
+    // If the prompt contains "countdown timer" or similar, return the countdown timer image
+    if (lowercasePrompt.includes("countdown timer") || 
+        lowercasePrompt.includes("countdown app") || 
+        lowercasePrompt.includes("timer component") ||
+        lowercasePrompt.includes("timer app") ||
+        lowercasePrompt.includes("countdown")) {
+      return countdownTimerImage;
+    }
     
     // If the prompt contains "weather application" or similar, return the weather app image
     if (lowercasePrompt.includes("weather application") || 
