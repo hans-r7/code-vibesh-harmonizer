@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,6 +34,9 @@ const CodeGen = () => {
   
   // Todo application image URL - updated with the new image
   const todoAppImage = "/lovable-uploads/122e18da-825d-49ba-9d7d-8b2b43a75ca2.png";
+  
+  // Calculator application image URL - newly added
+  const calculatorAppImage = "/lovable-uploads/8c51f07f-5d50-4b91-9df6-8d70c2f670a3.png";
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -81,10 +85,19 @@ const CodeGen = () => {
   };
   
   const getRandomPlaceholder = () => {
-    // If the prompt contains "todo application" or "todo list", return the todo app image
-    if (prompt.toLowerCase().includes("todo application") || 
-        prompt.toLowerCase().includes("todo list") || 
-        prompt.toLowerCase().includes("todo app")) {
+    const lowercasePrompt = prompt.toLowerCase();
+    
+    // If the prompt contains "calculator application" or similar, return the calculator app image
+    if (lowercasePrompt.includes("calculator application") || 
+        lowercasePrompt.includes("calculator app") || 
+        lowercasePrompt.includes("calculator")) {
+      return calculatorAppImage;
+    }
+    
+    // If the prompt contains "todo application" or similar, return the todo app image
+    if (lowercasePrompt.includes("todo application") || 
+        lowercasePrompt.includes("todo list") || 
+        lowercasePrompt.includes("todo app")) {
       return todoAppImage;
     }
     
