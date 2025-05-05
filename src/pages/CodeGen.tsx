@@ -24,10 +24,12 @@ const CodeGen = () => {
     "Build a countdown timer component"
   ]);
   
+  // Updated placeholders with web application UI images
   const previewPlaceholders = [
-    "/placeholder.svg",
-    "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80"
+    "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=800&q=80", // E-commerce dashboard
+    "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&w=800&q=80", // Modern web app UI
+    "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80", // E-commerce product page
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"  // Professional dashboard
   ];
 
   const handleGenerate = async () => {
@@ -167,12 +169,12 @@ const CodeGen = () => {
               <div className="flex justify-center items-center bg-black/30 rounded-lg overflow-hidden">
                 <img 
                   src={getRandomPlaceholder()} 
-                  alt="Code preview" 
-                  className="max-h-[300px] object-contain shadow-lg rounded" 
+                  alt="Web application preview" 
+                  className="max-h-[300px] w-full object-cover shadow-lg rounded" 
                 />
               </div>
               <p className="text-xs text-white/60 mt-2 text-center">
-                This is a visualization of how your code might look when rendered
+                This is a visualization of how your web application might look when rendered
               </p>
             </div>
           )}
