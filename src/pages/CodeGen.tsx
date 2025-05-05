@@ -31,8 +31,8 @@ const CodeGen = () => {
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"  // Professional dashboard
   ];
   
-  // Todo application image URL
-  const todoAppImage = "/lovable-uploads/c6ecbd98-3344-42c5-b09e-199fbf42193e.png";
+  // Todo application image URL - updated with the new image
+  const todoAppImage = "/lovable-uploads/122e18da-825d-49ba-9d7d-8b2b43a75ca2.png";
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
