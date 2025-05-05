@@ -35,8 +35,11 @@ const CodeGen = () => {
   // Todo application image URL - updated with the new image
   const todoAppImage = "/lovable-uploads/122e18da-825d-49ba-9d7d-8b2b43a75ca2.png";
   
-  // Calculator application image URL - newly added
+  // Calculator application image URL
   const calculatorAppImage = "/lovable-uploads/8c51f07f-5d50-4b91-9df6-8d70c2f670a3.png";
+  
+  // Weather application image URL - newly added
+  const weatherAppImage = "/lovable-uploads/b5a80a42-9abd-4e4a-949c-74b94f467ab5.png";
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -86,6 +89,14 @@ const CodeGen = () => {
   
   const getRandomPlaceholder = () => {
     const lowercasePrompt = prompt.toLowerCase();
+    
+    // If the prompt contains "weather application" or similar, return the weather app image
+    if (lowercasePrompt.includes("weather application") || 
+        lowercasePrompt.includes("weather app") || 
+        lowercasePrompt.includes("weather forecast") ||
+        lowercasePrompt.includes("weather")) {
+      return weatherAppImage;
+    }
     
     // If the prompt contains "calculator application" or similar, return the calculator app image
     if (lowercasePrompt.includes("calculator application") || 
