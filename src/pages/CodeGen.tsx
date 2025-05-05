@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,6 +30,9 @@ const CodeGen = () => {
     "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80", // E-commerce product page
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"  // Professional dashboard
   ];
+  
+  // Todo application image URL
+  const todoAppImage = "/lovable-uploads/c6ecbd98-3344-42c5-b09e-199fbf42193e.png";
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -79,6 +81,14 @@ const CodeGen = () => {
   };
   
   const getRandomPlaceholder = () => {
+    // If the prompt contains "todo application" or "todo list", return the todo app image
+    if (prompt.toLowerCase().includes("todo application") || 
+        prompt.toLowerCase().includes("todo list") || 
+        prompt.toLowerCase().includes("todo app")) {
+      return todoAppImage;
+    }
+    
+    // Otherwise return a random image from the placeholders
     const randomIndex = Math.floor(Math.random() * previewPlaceholders.length);
     return previewPlaceholders[randomIndex];
   };
