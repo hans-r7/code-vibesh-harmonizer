@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -5,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { generateCode } from "@/services/codeGenService";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2, ArrowRight } from "lucide-react";
+import { AlertCircle, Loader2, ArrowRight, Play } from "lucide-react";
 
 const CodeGen = () => {
   const [prompt, setPrompt] = useState("");
@@ -13,6 +14,7 @@ const CodeGen = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
   const [suggestedQuestions] = useState([
     "Generate a React calculator app with basic operations",
     "Create a todo list app with local storage",
@@ -21,6 +23,12 @@ const CodeGen = () => {
     "Create a React image gallery with previews",
     "Build a countdown timer component"
   ]);
+  
+  const previewPlaceholders = [
+    "/placeholder.svg",
+    "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80"
+  ];
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -31,6 +39,7 @@ const CodeGen = () => {
     setError(null);
     setIsGenerating(true);
     setCode(""); // Clear previous code
+    setShowPreview(false); // Hide preview when generating new code
     
     try {
       toast.info("Connecting to code generation API...");
@@ -54,6 +63,22 @@ const CodeGen = () => {
     } finally {
       setIsGenerating(false);
     }
+  };
+  
+  const handleTogglePreview = () => {
+    if (!code) {
+      toast.error("Generate some code first before viewing preview");
+      return;
+    }
+    setShowPreview(!showPreview);
+    if (!showPreview) {
+      toast.info("Showing preview of how the code might look when rendered");
+    }
+  };
+  
+  const getRandomPlaceholder = () => {
+    const randomIndex = Math.floor(Math.random() * previewPlaceholders.length);
+    return previewPlaceholders[randomIndex];
   };
 
   return (
@@ -114,24 +139,57 @@ const CodeGen = () => {
         </div>
 
         <Card className="bg-vibesh-dark/95 p-6 text-white">
-          <h2 className="text-2xl font-bold mb-4">Code Output</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Code Output</h2>
+            {code && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="border-vibesh-accent text-vibesh-accent hover:bg-vibesh-accent/20"
+                onClick={handleTogglePreview}
+              >
+                <Play size={16} className="mr-2" />
+                {showPreview ? "Hide Preview" : "Show Preview"}
+              </Button>
+            )}
+          </div>
+          
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
+          
+          {showPreview && (
+            <div className="mb-6 bg-white/10 rounded-lg p-4 border border-white/20">
+              <h3 className="text-lg font-medium mb-3 text-vibesh-accent">Visual Preview</h3>
+              <div className="flex justify-center items-center bg-black/30 rounded-lg overflow-hidden">
+                <img 
+                  src={getRandomPlaceholder()} 
+                  alt="Code preview" 
+                  className="max-h-[300px] object-contain shadow-lg rounded" 
+                />
+              </div>
+              <p className="text-xs text-white/60 mt-2 text-center">
+                This is a visualization of how your code might look when rendered
+              </p>
+            </div>
+          )}
+          
           {isGenerating && !code && (
             <div className="flex items-center justify-center p-8">
               <Loader2 className="h-8 w-8 animate-spin text-vibesh-accent" />
               <span className="ml-3">Generating code...</span>
             </div>
           )}
+          
           {!isGenerating && !code && !error && (
             <div className="text-gray-400 p-8 text-center">
               Enter a prompt and click Generate to create code
             </div>
           )}
+          
           {code && (
             <pre className="font-mono text-sm overflow-auto max-h-[600px] whitespace-pre-wrap bg-black/30 p-4 rounded">
               <code>{code}</code>
