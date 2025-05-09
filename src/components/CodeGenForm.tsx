@@ -1,8 +1,7 @@
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2 } from "lucide-react";
+import { Loader2, Code } from "lucide-react";
 
 type CodeGenFormProps = {
   prompt: string;
@@ -36,7 +35,10 @@ export const CodeGenForm = ({
             Generating...
           </>
         ) : (
-          "Generate"
+          <>
+            <Code className="mr-2 h-4 w-4" />
+            Generate
+          </>
         )}
       </Button>
     </div>
