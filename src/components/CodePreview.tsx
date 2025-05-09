@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Code, Loader2, Play } from "lucide-react";
+import { AlertCircle, Code, Loader2, Play, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -74,6 +75,24 @@ export const CodePreview = ({ code, error, isGenerating, prompt }: CodePreviewPr
         </body>
       </html>
     `;
+  };
+  
+  // Function to open sandbox in new tab with less restrictions
+  const openInNewTab = () => {
+    if (!code) {
+      toast.error("Generate some code first before opening in a new tab");
+      return;
+    }
+
+    // Create a blob from the HTML content
+    const htmlContent = createSandboxHtml();
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    
+    // Open the blob URL in a new tab/window
+    window.open(url, '_blank');
+    
+    toast.info("Opening code sandbox in a new tab");
   };
   
   // Updated placeholders with web application UI images
@@ -188,6 +207,15 @@ export const CodePreview = ({ code, error, isGenerating, prompt }: CodePreviewPr
                 <Code size={16} className="mr-2" />
                 Run Code
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-vibesh-accent text-vibesh-accent hover:bg-vibesh-accent/20"
+                onClick={openInNewTab}
+              >
+                <ExternalLink size={16} className="mr-2" />
+                Open in New Tab
+              </Button>
             </>
           )}
         </div>
@@ -245,6 +273,7 @@ export const CodePreview = ({ code, error, isGenerating, prompt }: CodePreviewPr
                   </div>
                   <p className="text-xs text-white/60 mt-2">
                     This is an attempt to run your code in a sandboxed environment. Complex code may not render properly.
+                    For full functionality, use the "Open in New Tab" button.
                   </p>
                 </div>
               </div>
