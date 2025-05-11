@@ -11,7 +11,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-vibesh-yellow to-vibesh-coral flex flex-col items-center justify-center p-6 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-purple-300 to-teal-200 flex flex-col items-center justify-center p-6 text-center">
       <h1 className="text-6xl font-bold text-vibesh-dark mb-6">
         Code with Vibes.
       </h1>
@@ -20,9 +20,9 @@ const Index = () => {
       </p>
       <Button 
         onClick={handlePrompt} 
-        className="bg-vibesh-accent hover:bg-vibesh-accent/90 text-vibesh-dark font-medium"
+        className="bg-vibesh-dark hover:bg-vibesh-dark/90 text-white font-medium px-6 py-2 rounded-full"
       >
-        Generate <ArrowRight className="ml-2 h-4 w-4" />
+        Prompt Me <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     </div>
   );
