@@ -170,7 +170,7 @@ const CodeGen = () => {
             />
             <Button
               onClick={handleGenerate}
-              className="bg-vibesh-accent hover:bg-vibesh-accent/90 text-vibesh-dark font-medium"
+              className="bg-vibesh-dark hover:bg-vibesh-dark/90 text-white font-medium"
               disabled={isGenerating}
             >
               {isGenerating ? (
