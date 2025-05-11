@@ -54,7 +54,7 @@ const Login = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full bg-vibesh-accent hover:bg-vibesh-accent/90">
+            <Button type="submit" className="w-full bg-lumicode-dark hover:bg-lumicode-dark/90 text-white">
               <LogIn className="mr-2 h-4 w-4" /> Sign In
             </Button>
           </form>
