@@ -23,7 +23,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-vibesh-yellow to-vibesh-coral flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4 min-h-screen">
       <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>

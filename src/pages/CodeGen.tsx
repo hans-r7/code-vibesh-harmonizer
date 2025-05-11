@@ -129,7 +129,7 @@ const CodeGen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-vibesh-yellow to-vibesh-coral p-6">
+    <div className="p-6">
       <div className="max-w-7xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
           <div className="bg-white/90 rounded-2xl p-6 border border-white/20 shadow-lg">

@@ -11,7 +11,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-200 via-purple-300 to-teal-200 flex flex-col items-center justify-center p-6 text-center">
+    <div className="flex flex-col items-center justify-center p-6 text-center">
       <h1 className="text-6xl font-bold text-vibesh-dark mb-6">
         Code with Vibes.
       </h1>
