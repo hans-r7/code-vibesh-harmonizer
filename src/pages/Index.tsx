@@ -17,7 +17,7 @@ const Index = () => {
           Code with Vibes.
         </h1>
         <p className="text-xl text-vibesh-dark/80 mb-12 max-w-2xl">
-          An AI-native playground for building, debugging, and dreaming in code.
+          An AI-native playground for building and dreaming in code.
         </p>
         <Button 
           onClick={handlePrompt} 
@@ -31,4 +31,3 @@ const Index = () => {
 };
 
 export default Index;
-
