@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -53,7 +54,7 @@ const SignUp = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full bg-vibesh-accent hover:bg-vibesh-accent/90">
+            <Button type="submit" className="w-full bg-lumicode-dark hover:bg-lumicode-dark/90 text-white">
               <UserPlus className="mr-2 h-4 w-4" /> Sign Up
             </Button>
           </form>
