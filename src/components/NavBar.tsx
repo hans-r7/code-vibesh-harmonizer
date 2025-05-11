@@ -15,7 +15,7 @@ export const NavBar = () => {
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-bold text-vibesh-dark">
-          VibeCoder
+          Lumicode
         </Link>
         <div className={cn(
           "space-x-6 transition-all duration-300",
