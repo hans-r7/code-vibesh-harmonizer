@@ -23,7 +23,7 @@ const Index = () => {
           onClick={handlePrompt} 
           className="bg-vibesh-dark hover:bg-vibesh-dark/90 text-white font-medium px-6 py-2 rounded-full"
         >
-          Prompt Me <ArrowRight className="ml-2 h-4 w-4" />
+          Prompt <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
     </div>
@@ -31,3 +31,4 @@ const Index = () => {
 };
 
 export default Index;
+
