@@ -17,10 +17,7 @@ export const NavBar = () => {
         <Link to="/" className="text-xl font-bold text-lumicode-dark">
           Lumicode
         </Link>
-        <div className={cn(
-          "space-x-6 transition-all duration-300",
-          isScrolled ? "opacity-0 invisible" : "opacity-100 visible"
-        )}>
+        <div className="space-x-6">
           <Link to="/about" className="text-lumicode-dark hover:opacity-80">
             About
           </Link>
