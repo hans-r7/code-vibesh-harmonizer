@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,7 +21,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        vibesh: {
+        lumicode: {
           yellow: '#FEC6A1',
           coral: '#FFB4A2',
           accent: '#FFD93D',

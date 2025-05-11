@@ -13,15 +13,15 @@ const Index = () => {
   return (
     <div className="flex-1 flex items-center justify-center p-6 text-center">
       <div className="max-w-2xl">
-        <h1 className="text-6xl font-bold text-vibesh-dark mb-6">
+        <h1 className="text-6xl font-bold text-lumicode-dark mb-6">
           Code with Vibes.
         </h1>
-        <p className="text-xl text-vibesh-dark/80 mb-12 max-w-2xl">
+        <p className="text-xl text-lumicode-dark/80 mb-12 max-w-2xl">
           An AI-native playground for building and dreaming in code.
         </p>
         <Button 
           onClick={handlePrompt} 
-          className="bg-vibesh-dark hover:bg-vibesh-dark/90 text-white font-medium px-6 py-2 rounded-full"
+          className="bg-lumicode-dark hover:bg-lumicode-dark/90 text-white font-medium px-6 py-2 rounded-full"
         >
           Prompt <ArrowRight className="ml-2 h-4 w-4" />
         </Button>

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -133,26 +134,26 @@ const CodeGen = () => {
       <div className="max-w-7xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
           <div className="bg-white/90 rounded-2xl p-6 border border-white/20 shadow-lg">
-            <h2 className="text-2xl font-bold text-vibesh-dark mb-4">User History</h2>
+            <h2 className="text-2xl font-bold text-lumicode-dark mb-4">User History</h2>
             <div className="space-y-3">
               {suggestedQuestions.map((question, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-lg p-3 cursor-pointer 
                     transition-all duration-300 
-                    hover:bg-vibesh-accent/10 
+                    hover:bg-lumicode-accent/10 
                     hover:shadow-md 
                     border border-transparent 
-                    hover:border-vibesh-accent/30 
+                    hover:border-lumicode-accent/30 
                     group"
                   onClick={() => setPrompt(question)}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-vibesh-dark group-hover:text-vibesh-dark/80 transition-colors">
+                    <span className="text-lumicode-dark group-hover:text-lumicode-dark/80 transition-colors">
                       {question}
                     </span>
                     <ArrowRight 
-                      className="text-vibesh-accent opacity-0 group-hover:opacity-100 transition-opacity" 
+                      className="text-lumicode-accent opacity-0 group-hover:opacity-100 transition-opacity" 
                       size={18} 
                     />
                   </div>
@@ -170,7 +171,7 @@ const CodeGen = () => {
             />
             <Button
               onClick={handleGenerate}
-              className="bg-vibesh-dark hover:bg-vibesh-dark/90 text-white font-medium"
+              className="bg-lumicode-dark hover:bg-lumicode-dark/90 text-white font-medium"
               disabled={isGenerating}
             >
               {isGenerating ? (
@@ -185,14 +186,14 @@ const CodeGen = () => {
           </div>
         </div>
 
-        <Card className="bg-vibesh-dark/95 p-6 text-white">
+        <Card className="bg-lumicode-dark/95 p-6 text-white">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Code Output</h2>
             {code && (
               <Button 
                 variant="outline" 
                 size="sm"
-                className="border-vibesh-accent text-vibesh-accent hover:bg-vibesh-accent/20"
+                className="border-lumicode-accent text-lumicode-accent hover:bg-lumicode-accent/20"
                 onClick={handleTogglePreview}
               >
                 <Play size={16} className="mr-2" />
@@ -210,7 +211,7 @@ const CodeGen = () => {
           
           {showPreview && (
             <div className="mb-6 bg-white/10 rounded-lg p-4 border border-white/20">
-              <h3 className="text-lg font-medium mb-3 text-vibesh-accent">Visual Preview</h3>
+              <h3 className="text-lg font-medium mb-3 text-lumicode-accent">Visual Preview</h3>
               <div className="flex justify-center items-center bg-black/30 rounded-lg overflow-hidden">
                 <img 
                   src={getRandomPlaceholder()} 
@@ -226,7 +227,7 @@ const CodeGen = () => {
           
           {isGenerating && !code && (
             <div className="flex items-center justify-center p-8">
-              <Loader2 className="h-8 w-8 animate-spin text-vibesh-accent" />
+              <Loader2 className="h-8 w-8 animate-spin text-lumicode-accent" />
               <span className="ml-3">Generating code...</span>
             </div>
           )}

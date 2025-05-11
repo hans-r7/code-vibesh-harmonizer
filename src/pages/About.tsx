@@ -1,3 +1,4 @@
+
 import { Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
@@ -34,9 +35,9 @@ const About = () => {
     <div className="p-6">
       <div className="max-w-7xl mx-auto mt-20">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-vibesh-dark mb-4">About VibeCoder</h1>
-          <p className="text-lg text-vibesh-dark/80 max-w-2xl mx-auto">
-            VibeCoder was created as part of our Systems Analysis and Design course at CSU Long Beach.
+          <h1 className="text-4xl font-bold text-lumicode-dark mb-4">About Lumicode</h1>
+          <p className="text-lg text-lumicode-dark/80 max-w-2xl mx-auto">
+            Lumicode was created as part of our Systems Analysis and Design course at CSU Long Beach.
             Inspired by our shared passion for technology, our team set out to make code generation more accessible, intuitive, and enjoyable for everyone.
 
           </p>
@@ -46,12 +47,12 @@ const About = () => {
           {teamMembers.map((member, index) => (
             <Card key={index} className="p-6 bg-white/90 hover:bg-white transition-colors">
               <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-vibesh-accent rounded-full flex items-center justify-center mb-4">
-                  <Users className="w-8 h-8 text-vibesh-dark" />
+                <div className="w-16 h-16 bg-lumicode-accent rounded-full flex items-center justify-center mb-4">
+                  <Users className="w-8 h-8 text-lumicode-dark" />
                 </div>
-                <h3 className="text-xl font-semibold text-vibesh-dark mb-2">{member.name}</h3>
-                <p className="text-vibesh-accent font-medium mb-2">{member.role}</p>
-                <p className="text-vibesh-dark/70">{member.description}</p>
+                <h3 className="text-xl font-semibold text-lumicode-dark mb-2">{member.name}</h3>
+                <p className="text-lumicode-accent font-medium mb-2">{member.role}</p>
+                <p className="text-lumicode-dark/70">{member.description}</p>
               </div>
             </Card>
           ))}
