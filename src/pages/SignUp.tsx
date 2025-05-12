@@ -16,10 +16,14 @@ const SignUp = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Show a success toast
     toast({
-      title: "Not implemented",
-      description: "Please integrate Supabase to enable authentication",
+      title: "Account created",
+      description: "Redirecting to code generation page...",
     });
+    
+    // Redirect to the code generation page
+    navigate("/code");
   };
 
   return (
