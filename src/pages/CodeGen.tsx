@@ -296,7 +296,7 @@ const CodeGen = () => {
               <iframe
                 key={code.slice(0, 32)}
                 srcDoc={buildPreviewHtml()}
-                sandbox="allow-scripts"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                 className="w-full h-full bg-white"
                 title="Live preview"
               />
