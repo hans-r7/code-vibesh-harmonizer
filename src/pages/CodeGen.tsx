@@ -1,249 +1,314 @@
-
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { generateCode } from "@/services/codeGenService";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2, ArrowRight, Play } from "lucide-react";
+import { ArrowUp, Loader2, Sparkles, Copy, Check, Code2, Eye, Play } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const EXAMPLE_PROMPTS = [
+  "Build a React calculator with basic operations",
+  "Create a todo list app with local storage",
+  "Build a weather app that fetches from an API",
+  "Make a login form with validation",
+  "Create an image gallery with previews",
+  "Build a countdown timer component",
+];
+
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
 
 const CodeGen = () => {
+  const location = useLocation();
+  const initialPrompt = (location.state as { initialPrompt?: string })?.initialPrompt ?? "";
+
   const [prompt, setPrompt] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
   const [code, setCode] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [promptHistory, setPromptHistory] = useState<string[]>([]);
-  const [showPreview, setShowPreview] = useState(false);
-  const [suggestedQuestions] = useState([
-    "Generate a React calculator app with basic operations",
-    "Create a todo list app with local storage",
-    "Build a weather app that fetches data from an API",
-    "Make a simple authentication form with validation",
-    "Create a React image gallery with previews",
-    "Build a countdown timer component"
-  ]);
-  
-  // Updated placeholders with web application UI images
-  const previewPlaceholders = [
-    "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=800&q=80", // E-commerce dashboard
-    "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&w=800&q=80", // Modern web app UI
-    "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80", // E-commerce product page
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"  // Professional dashboard
-  ];
-  
-  // Todo application image URL - updated with the new image
-  const todoAppImage = "/lovable-uploads/122e18da-825d-49ba-9d7d-8b2b43a75ca2.png";
-  
-  // Calculator application image URL
-  const calculatorAppImage = "/lovable-uploads/8c51f07f-5d50-4b91-9df6-8d70c2f670a3.png";
-  
-  // Weather application image URL
-  const weatherAppImage = "/lovable-uploads/b5a80a42-9abd-4e4a-949c-74b94f467ab5.png";
-  
-  // Countdown timer application image URL - newly added
-  const countdownTimerImage = "/lovable-uploads/e2ce4071-b505-49dd-af9d-093fef64d612.png";
+  const [copied, setCopied] = useState(false);
+  const [previewTab, setPreviewTab] = useState<"preview" | "code">("preview");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const didRunInitial = useRef(false);
 
-  const handleGenerate = async () => {
-    if (!prompt.trim()) {
-      toast.error("Please enter a prompt");
-      return;
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-    setError(null);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const runGenerate = async (userPrompt: string) => {
+    const trimmed = userPrompt.trim();
+    if (!trimmed) return;
+
+    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
     setIsGenerating(true);
-    setCode(""); // Clear previous code
-    setShowPreview(false); // Hide preview when generating new code
-    
+
     try {
-      toast.info("Connecting to code generation API...");
-      console.log("Generating code for prompt:", prompt);
-      
-      const generatedCode = await generateCode(prompt);
-      console.log("Code generation complete, length:", generatedCode?.length || 0);
-      
-      if (generatedCode && generatedCode.length > 0) {
-        setCode(generatedCode);
-        setPromptHistory(prev => [prompt, ...prev.slice(0, 4)]); // Keep last 5 prompts
-        toast.success("Code generated successfully!");
-      } else {
-        setError("No code was generated. Try a different prompt.");
-        toast.error("Failed to generate code. Please try again with a different prompt.");
-      }
-    } catch (error) {
-      console.error("Code generation error:", error);
-      setError("Failed to generate code. Please try again.");
-      toast.error("Failed to generate code. Please try again.");
+      const result = await generateCode(trimmed);
+      setCode(result);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "I built that for you. Check the preview on the right." },
+      ]);
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong. Please try again.");
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "I ran into an issue generating code. Try rephrasing." },
+      ]);
     } finally {
       setIsGenerating(false);
     }
   };
-  
-  const handleTogglePreview = () => {
-    if (!code) {
-      toast.error("Generate some code first before viewing preview");
-      return;
+
+  useEffect(() => {
+    if (initialPrompt && !didRunInitial.current) {
+      didRunInitial.current = true;
+      runGenerate(initialPrompt);
     }
-    setShowPreview(!showPreview);
-    if (!showPreview) {
-      toast.info("Showing preview of how the code might look when rendered");
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialPrompt]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prompt.trim() || isGenerating) return;
+    runGenerate(prompt);
+    setPrompt("");
   };
-  
-  const getRandomPlaceholder = () => {
-    const lowercasePrompt = prompt.toLowerCase();
-    
-    // If the prompt contains "countdown timer" or similar, return the countdown timer image
-    if (lowercasePrompt.includes("countdown timer") || 
-        lowercasePrompt.includes("countdown app") || 
-        lowercasePrompt.includes("timer component") ||
-        lowercasePrompt.includes("timer app") ||
-        lowercasePrompt.includes("countdown")) {
-      return countdownTimerImage;
-    }
-    
-    // If the prompt contains "weather application" or similar, return the weather app image
-    if (lowercasePrompt.includes("weather application") || 
-        lowercasePrompt.includes("weather app") || 
-        lowercasePrompt.includes("weather forecast") ||
-        lowercasePrompt.includes("weather")) {
-      return weatherAppImage;
-    }
-    
-    // If the prompt contains "calculator application" or similar, return the calculator app image
-    if (lowercasePrompt.includes("calculator application") || 
-        lowercasePrompt.includes("calculator app") || 
-        lowercasePrompt.includes("calculator")) {
-      return calculatorAppImage;
-    }
-    
-    // If the prompt contains "todo application" or similar, return the todo app image
-    if (lowercasePrompt.includes("todo application") || 
-        lowercasePrompt.includes("todo list") || 
-        lowercasePrompt.includes("todo app")) {
-      return todoAppImage;
-    }
-    
-    // Otherwise return a random image from the placeholders
-    const randomIndex = Math.floor(Math.random() * previewPlaceholders.length);
-    return previewPlaceholders[randomIndex];
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    toast.success("Copied to clipboard");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const buildPreviewHtml = () => {
+    if (!code) return "";
+    return `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body { margin: 0; font-family: system-ui, sans-serif; background: #fff; color: #111; }
+      #root { min-height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      try {
+        ${code}
+        const candidates = ['App','default','Component','Main']
+          .map(k => window[k])
+          .filter(v => typeof v === 'function');
+        const Comp = candidates[0] || Object.values(window).filter(v => typeof v === 'function' && /^[A-Z]/.test(v.name || ''))[0];
+        if (Comp) {
+          ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Comp));
+        } else {
+          document.getElementById('root').innerHTML = '<div style="padding:24px;color:#666;">Code executed — no React component to render.</div>';
+        }
+      } catch (err) {
+        document.getElementById('root').innerHTML = '<pre style="padding:24px;color:#c00;white-space:pre-wrap;">' + String(err) + '</pre>';
+      }
+    </script>
+  </body>
+</html>`;
   };
 
   return (
-    <div className="p-6">
-      <div className="max-w-7xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <div className="bg-white/90 rounded-2xl p-6 border border-white/20 shadow-lg">
-            <h2 className="text-2xl font-bold text-lumicode-dark mb-4">User History</h2>
-            <div className="space-y-3">
-              {suggestedQuestions.map((question, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-lg p-3 cursor-pointer 
-                    transition-all duration-300 
-                    hover:bg-lumicode-accent/10 
-                    hover:shadow-md 
-                    border border-transparent 
-                    hover:border-lumicode-accent/30 
-                    group"
-                  onClick={() => setPrompt(question)}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-lumicode-dark group-hover:text-lumicode-dark/80 transition-colors">
-                      {question}
-                    </span>
-                    <ArrowRight 
-                      className="text-lumicode-accent opacity-0 group-hover:opacity-100 transition-opacity" 
-                      size={18} 
-                    />
-                  </div>
-                </div>
-              ))}
+    <div className="flex-1 flex flex-col pt-16 h-screen">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[400px_1fr] overflow-hidden">
+        {/* Chat panel */}
+        <aside className="border-r border-border bg-card/40 flex flex-col overflow-hidden">
+          <div className="px-5 py-4 border-b border-border">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-md bg-gradient-primary flex items-center justify-center">
+                <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
+              </div>
+              <span className="text-sm font-semibold">Lumicode Chat</span>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <Textarea
-              placeholder="Write your own prompt..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              className="min-h-[100px] bg-white/90"
-            />
-            <Button
-              onClick={handleGenerate}
-              className="bg-lumicode-dark hover:bg-lumicode-dark/90 text-white font-medium"
-              disabled={isGenerating}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                "Generate"
-              )}
-            </Button>
-          </div>
-        </div>
+          <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4">
+            {messages.length === 0 && (
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Describe what you'd like to build, or try one of these:
+                </p>
+                {EXAMPLE_PROMPTS.map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPrompt(p)}
+                    className="w-full text-left px-3 py-2.5 rounded-lg border border-border bg-secondary/40 hover:bg-secondary hover:border-primary/40 transition-all text-sm text-foreground/90"
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
 
-        <Card className="bg-lumicode-dark/95 p-6 text-white">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Code Output</h2>
-            {code && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="border-lumicode-accent text-lumicode-accent hover:bg-lumicode-accent/20"
-                onClick={handleTogglePreview}
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "animate-fade-in",
+                  msg.role === "user" ? "flex justify-end" : "flex justify-start"
+                )}
               >
-                <Play size={16} className="mr-2" />
-                {showPreview ? "Hide Preview" : "Show Preview"}
+                <div
+                  className={cn(
+                    "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm",
+                    msg.role === "user"
+                      ? "bg-gradient-primary text-primary-foreground"
+                      : "bg-secondary text-foreground border border-border"
+                  )}
+                >
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+
+            {isGenerating && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-secondary border border-border rounded-2xl px-4 py-3 flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  <span className="text-sm text-muted-foreground">Building...</span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-4 border-t border-border">
+            <div className="relative">
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e as unknown as React.FormEvent);
+                  }
+                }}
+                placeholder="Ask Lumicode..."
+                rows={2}
+                disabled={isGenerating}
+                className="w-full bg-input border border-border rounded-xl px-3 py-2.5 pr-12 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:border-primary/60 disabled:opacity-60"
+              />
+              <Button
+                type="submit"
+                size="icon"
+                disabled={isGenerating || !prompt.trim()}
+                className="absolute right-2 bottom-2 h-8 w-8 rounded-lg bg-gradient-primary text-primary-foreground hover:opacity-90 disabled:opacity-40"
+              >
+                <ArrowUp className="w-4 h-4" />
               </Button>
+            </div>
+          </form>
+        </aside>
+
+        {/* Preview panel */}
+        <section className="flex flex-col overflow-hidden bg-background">
+          <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+            <div className="flex items-center gap-1 bg-secondary/60 border border-border rounded-lg p-0.5">
+              <button
+                onClick={() => setPreviewTab("preview")}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
+                  previewTab === "preview"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Eye className="w-3.5 h-3.5" /> Preview
+              </button>
+              <button
+                onClick={() => setPreviewTab("code")}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
+                  previewTab === "code"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Code2 className="w-3.5 h-3.5" /> Code
+              </button>
+            </div>
+
+            {code && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 mr-1.5" /> : <Copy className="w-3.5 h-3.5 mr-1.5" />}
+                  {copied ? "Copied" : "Copy"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const blob = new Blob([buildPreviewHtml()], { type: "text/html" });
+                    window.open(URL.createObjectURL(blob), "_blank");
+                  }}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Play className="w-3.5 h-3.5 mr-1.5" /> Open
+                </Button>
+              </div>
             )}
           </div>
-          
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          
-          {showPreview && (
-            <div className="mb-6 bg-white/10 rounded-lg p-4 border border-white/20">
-              <h3 className="text-lg font-medium mb-3 text-lumicode-accent">Visual Preview</h3>
-              <div className="flex justify-center items-center bg-black/30 rounded-lg overflow-hidden">
-                <img 
-                  src={getRandomPlaceholder()} 
-                  alt="Web application preview" 
-                  className="max-h-[300px] w-full object-cover shadow-lg rounded" 
-                />
+
+          <div className="flex-1 overflow-hidden">
+            {!code && !isGenerating && (
+              <div className="h-full flex flex-col items-center justify-center text-center px-6">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-primary/10 border border-primary/20 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold mb-1">Nothing to preview yet</h3>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  Send a prompt on the left and Lumicode will generate a working app you can preview here.
+                </p>
               </div>
-              <p className="text-xs text-white/60 mt-2 text-center">
-                This is a visualization of how your web application might look when rendered
-              </p>
-            </div>
-          )}
-          
-          {isGenerating && !code && (
-            <div className="flex items-center justify-center p-8">
-              <Loader2 className="h-8 w-8 animate-spin text-lumicode-accent" />
-              <span className="ml-3">Generating code...</span>
-            </div>
-          )}
-          
-          {!isGenerating && !code && !error && (
-            <div className="text-gray-400 p-8 text-center">
-              Enter a prompt and click Generate to create code
-            </div>
-          )}
-          
-          {code && (
-            <pre className="font-mono text-sm overflow-auto max-h-[600px] whitespace-pre-wrap bg-black/30 p-4 rounded">
-              <code>{code}</code>
-            </pre>
-          )}
-        </Card>
+            )}
+
+            {isGenerating && !code && (
+              <div className="h-full flex flex-col items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary mb-3" />
+                <p className="text-sm text-muted-foreground">Generating your app...</p>
+              </div>
+            )}
+
+            {code && previewTab === "preview" && (
+              <iframe
+                key={code.slice(0, 32)}
+                srcDoc={buildPreviewHtml()}
+                sandbox="allow-scripts"
+                className="w-full h-full bg-white"
+                title="Live preview"
+              />
+            )}
+
+            {code && previewTab === "code" && (
+              <pre className="h-full overflow-auto p-6 text-xs font-mono bg-card/40 text-foreground/90 whitespace-pre-wrap">
+                <code>{code}</code>
+              </pre>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );

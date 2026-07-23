@@ -1,64 +1,52 @@
-
-import { Users } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Sparkles } from "lucide-react";
 
 const teamMembers = [
-  {
-    name: "Hans",
-    role: "Frontend Developer",
-    description: "Passionate about creating intuitive user interfaces and seamless user experiences."
-  },
-  {
-    name: "Chetan",
-    role: "Backend Developer",
-    description: "Skilled in building robust server-side applications and API integrations."
-  },
-  {
-    name: "Srujana",
-    role: "UI/UX Designer",
-    description: "Creative mind focused on designing beautiful and functional user experiences."
-  },
-  {
-    name: "Eshwar",
-    role: "Full Stack Developer",
-    description: "Versatile developer with expertise in both frontend and backend technologies."
-  },
-  {
-    name: "Drishtee",
-    role: "Project Manager",
-    description: "Organized leader ensuring smooth project execution and team coordination."
-  }
+  { name: "Hans", role: "Frontend Developer", initials: "HA" },
+  { name: "Chetan", role: "Backend Developer", initials: "CH" },
+  { name: "Srujana", role: "UI/UX Designer", initials: "SR" },
+  { name: "Eshwar", role: "Full Stack Developer", initials: "ES" },
+  { name: "Drishtee", role: "Project Manager", initials: "DR" },
 ];
 
 const About = () => {
   return (
-    <div className="p-6">
-      <div className="max-w-7xl mx-auto mt-20">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-lumicode-dark mb-4">About Lumicode</h1>
-          <p className="text-lg text-lumicode-dark/80 max-w-2xl mx-auto">
-            Lumicode was created as part of our Systems Analysis and Design course at CSU Long Beach.
-            Inspired by our shared passion for technology, our team set out to make code generation more accessible, intuitive, and enjoyable for everyone.
+    <main className="flex-1 relative bg-gradient-hero pt-32 pb-24 px-6">
+      <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
+      <div className="relative max-w-5xl mx-auto">
+        <div className="text-center mb-16 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-secondary/60 backdrop-blur-sm mb-6">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <span className="text-xs text-muted-foreground">Our story</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+            About <span className="text-gradient">Lumicode</span>
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Built by five students at CSU Long Beach for our Systems Analysis and Design course.
+            We wanted to make code generation feel effortless — and a little magical.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {teamMembers.map((member, index) => (
-            <Card key={index} className="p-6 bg-white/90 hover:bg-white transition-colors">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-lumicode-accent rounded-full flex items-center justify-center mb-4">
-                  <Users className="w-8 h-8 text-lumicode-dark" />
-                </div>
-                <h3 className="text-xl font-semibold text-lumicode-dark mb-2">{member.name}</h3>
-                <p className="text-lumicode-accent font-medium mb-2">{member.role}</p>
-                <p className="text-lumicode-dark/70">{member.description}</p>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {teamMembers.map((member, i) => (
+            <div
+              key={member.name}
+              className="group p-5 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all animate-fade-in-up text-center"
+              style={{ animationDelay: `${i * 0.05}s` }}
+            >
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gradient-primary flex items-center justify-center shadow-elegant group-hover:shadow-glow transition-shadow">
+                <span className="text-primary-foreground font-semibold text-sm">
+                  {member.initials}
+                </span>
               </div>
-            </Card>
+              <h3 className="font-semibold text-foreground">{member.name}</h3>
+              <p className="text-xs text-muted-foreground mt-1">{member.role}</p>
+            </div>
           ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
