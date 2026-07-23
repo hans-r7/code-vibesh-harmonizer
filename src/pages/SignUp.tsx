@@ -1,82 +1,89 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { UserPlus } from "lucide-react";
+import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 
 const SignUp = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { toast } = useToast();
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    // Show a success toast
-    toast({
-      title: "Account created",
-      description: "Redirecting to code generation page...",
-    });
-    
-    // Redirect to the code generation page
+    toast.success("Account created!");
     navigate("/code");
   };
 
   return (
-    <div className="flex items-center justify-center p-4 min-h-screen">
-      <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
-          <CardDescription className="text-center">
-            Enter your details to get started
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <main className="flex-1 flex items-center justify-center px-4 pt-24 pb-12 bg-gradient-hero relative">
+      <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+      <div className="relative w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-primary shadow-elegant mb-4">
+            <Sparkles className="w-6 h-6 text-primary-foreground" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">Create your account</h1>
+          <p className="text-muted-foreground mt-2">Start building in minutes</p>
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
           <form onSubmit={handleSignUp} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="fullName" className="text-sm">Full name</Label>
               <Input
                 id="fullName"
                 type="text"
-                placeholder="John Doe"
+                placeholder="Jane Doe"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
+                className="bg-input border-border h-11"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="bg-input border-border h-11"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-sm">Password</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-input border-border h-11"
               />
             </div>
-            <Button type="submit" className="w-full bg-lumicode-dark hover:bg-lumicode-dark/90 text-white">
-              <UserPlus className="mr-2 h-4 w-4" /> Sign Up
+            <Button
+              type="submit"
+              className="w-full h-11 bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-elegant"
+            >
+              Create account
             </Button>
           </form>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          Already have an account?{" "}
+          <Link to="/login" className="text-foreground hover:text-primary font-medium">
+            Log in
+          </Link>
+        </p>
+      </div>
+    </main>
   );
 };
 

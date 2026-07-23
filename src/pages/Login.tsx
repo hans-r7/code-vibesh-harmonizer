@@ -1,75 +1,81 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { LogIn } from "lucide-react";
+import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Show a success toast
-    toast({
-      title: "Login successful",
-      description: "Redirecting to code generation page...",
-    });
-    
-    // Redirect to the code generation page
+    toast.success("Welcome back!");
     navigate("/code");
   };
 
   return (
-    <div className="flex items-center justify-center p-4 min-h-screen">
-      <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <main className="flex-1 flex items-center justify-center px-4 pt-24 pb-12 bg-gradient-hero relative">
+      <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+      <div className="relative w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-primary shadow-elegant mb-4">
+            <Sparkles className="w-6 h-6 text-primary-foreground" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
+          <p className="text-muted-foreground mt-2">Log in to continue building</p>
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="bg-input border-border h-11"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-sm">Password</Label>
+                <a href="#" className="text-xs text-primary hover:underline">
+                  Forgot password?
+                </a>
+              </div>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-input border-border h-11"
               />
-              <div className="text-right">
-                <a href="#" className="text-sm text-lumicode-dark hover:underline">
-                  Forgot Password?
-                </a>
-              </div>
             </div>
-            <Button type="submit" className="w-full bg-lumicode-dark hover:bg-lumicode-dark/90 text-white">
-              <LogIn className="mr-2 h-4 w-4" /> Sign In
+            <Button
+              type="submit"
+              className="w-full h-11 bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-elegant"
+            >
+              Sign in
             </Button>
           </form>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-foreground hover:text-primary font-medium">
+            Sign up
+          </Link>
+        </p>
+      </div>
+    </main>
   );
 };
 
